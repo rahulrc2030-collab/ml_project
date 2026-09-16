@@ -8,6 +8,20 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from dataclasses import dataclass
+
+from src.components.data_tranformation import DataTransformationConfig
+from src.components.data_tranformation import DataTransformation
+
+from src.components.model_trainer import modeltrainigconfig
+from src.components.model_trainer import modeltrainer
+
+
+
+
+
+
+
+
 @dataclass
 class dataingestionconfig:
     train_data_path:str=os.path.join("aritifacts","train.csv")
@@ -25,7 +39,7 @@ class dataingestion:
                 df=pd.read_csv(os.path.join(os.getcwd(),"notebook/data/stud.csv"))
                 logging.info("reading the dataset as dataframe")
 
-                os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
+                os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)#makeing artifact dir
                 df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
 
                 logging.info("Train Test Split Initiated")
@@ -45,4 +59,12 @@ class dataingestion:
 
 if __name__=="__main__":
     obj=dataingestion()
-    obj.initiate_data_ingestion()
+    train_data,test_data=obj.initiate_data_ingestion()
+    data_trans=DataTransformation()
+    data_trans.initiate_data_tranformation(train_data,test_data)
+
+
+    train_arr,test_arr,preprocessor_p=data_trans.initiate_data_tranformation(train_data,test_data)
+
+    modeltrainer=modeltrainer()
+    print(modeltrainer.initaite_model_training(train_arr,test_arr))
