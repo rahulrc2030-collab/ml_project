@@ -7,7 +7,7 @@ from src.logger import logging
 import pickle
 import dill
 from sklearn.metrics import r2_score
-
+from sklearn.model_selection import GridSearchCV
 
 def save_obj(file_path,obj):
     try:
@@ -21,13 +21,25 @@ def save_obj(file_path,obj):
         raise CustomException(e,sys)
 
 
-def evaluate_models(x_train,y_train,x_test,y_test,models):
+def evaluate_models(x_train,y_train,x_test,y_test,models,diff_param):
+
 
     try:
         report={}
 
         for i in range(len(list(models))):
             model=list(models.values())[i]
+
+            para=diff_param[list(models.keys())[i]]
+
+            
+
+            gd=GridSearchCV(estimator=model,param_grid=para,cv=3,scoring="r2")
+            gd.fit(x_train,y_train)
+
+            best_params=gd.best_params_
+            model.set_params(**best_params)
+
 
             model.fit(x_train,y_train)
 
@@ -40,6 +52,9 @@ def evaluate_models(x_train,y_train,x_test,y_test,models):
 
 
             report[list(models.keys())[i]]=test_model_score
+
+
+
 
 
 
