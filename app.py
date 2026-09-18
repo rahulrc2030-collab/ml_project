@@ -11,12 +11,12 @@ app=Flask(__name__)
 application=app
 
 
-@app.route("/")
+@application.route("/")
 def index():
     return render_template("index.html")
 
 
-@app.route("/predictdata",methods=["GET","POST"])
+@application.route("/predictdata",methods=["GET","POST"])
 def predict_datapoint():
     if request.method=="POST":
         data=custom_data(
@@ -53,4 +53,4 @@ def predict_datapoint():
 
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
+    application.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
