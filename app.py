@@ -1,14 +1,14 @@
 from flask import Flask,request,render_template
-
+import os
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from src.pipeline.predict_pipeline import custom_data,predictpipeline
 
 
-application=Flask(__name__)
+app=Flask(__name__)
 
-app=application
+application=app
 
 
 @app.route("/")
@@ -53,4 +53,4 @@ def predict_datapoint():
 
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0",port=8080)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
